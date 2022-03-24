@@ -109,6 +109,7 @@ const navVariants = {
 const Header = () => {
   const [searchOpen, setSearchOpen] = useState(false);
   const homeMatch = useMatch("/");
+  const bigMovieMatch = useMatch("/movie/:movieId");
   const tvMatch = useMatch("tv");
   const inputAnimation = useAnimation();
   const navAnimation = useAnimation();
@@ -148,7 +149,9 @@ const Header = () => {
         </Logo>
         <Items>
           <Item>
-            <Link to="/">Home{homeMatch && <Circle layoutId="circle" />}</Link>
+            <Link to="/">
+              Home{(homeMatch || bigMovieMatch) && <Circle layoutId="circle" />}
+            </Link>
           </Item>
           <Item>
             <Link to="/tv">

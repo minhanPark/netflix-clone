@@ -4,6 +4,7 @@ import { getMovies, IGetMoviesResult } from "../api";
 import styled from "styled-components";
 import { AnimatePresence, motion } from "framer-motion";
 import { makeImagePath } from "../utils";
+import { useMatch, useNavigate } from "react-router-dom";
 
 const Wrapper = styled.div`
   background: black;
@@ -59,6 +60,7 @@ const Box = styled(motion.div)<{ bgPhoto: string }>`
   height: 200px;
   color: red;
   font-size: 66px;
+  cursor: pointer;
   &:first-child {
     transform-origin: center left;
   }
@@ -96,10 +98,16 @@ const boxVariants = {
 const offset = 6;
 
 const Home = () => {
+  const navigate = useNavigate();
+  const bigMovieMatch = useMatch("/movie/:movieId");
+  console.log(bigMovieMatch);
   const { data, isLoading } = useQuery<IGetMoviesResult>(
     ["movies", "nowPlaying"],
     getMovies
   );
+  const onBoxClicked = (movieId: number) => {
+    navigate(`/movie/${movieId}`);
+  };
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
   const increaseIndex = () => {
@@ -141,11 +149,12 @@ const Home = () => {
                   .map((movie) => (
                     <Box
                       key={movie.id}
-                      bgPhoto={makeImagePath(movie.backdrop_path, "w500")}
+                      bgPhoto={makeImagePath(movie.backdrop_path || "", "w500")}
                       variants={boxVariants}
                       initial="normal"
                       whileHover="hover"
                       transition={{ type: "tween" }}
+                      onClick={() => onBoxClicked(movie.id)}
                     />
                   ))}
               </Row>
